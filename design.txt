@@ -1,0 +1,12 @@
+1. outline task.
+2. Basic use case.
+3. Define each part of use case. 
+4. Define how each part needs to interact. 
+
+
+2a. Look for tesco site
+2b. Use site search function to look for "beans". 
+2c. collect results. 
+2d. Search results name and price. 
+2e. Order list by price. 
+2f. Print list
