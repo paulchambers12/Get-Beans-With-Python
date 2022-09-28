@@ -4,39 +4,26 @@
 
 from urllib.request import urlopen
 import re,sys
-#import numpy#,pandas
+import numpy,pandas
 
 
-def get_number_of_pages(split_html_content):
-    print(split_html_content)
-    pages = []
-    query_item1 = "Go to results page"
-    for string in split_html_content:
-        if query_item1 in string:
-            pages.append(string.replace("&amp;", "&"))
+query_item = str(sys.argv[1]).lower()
+#query_item = "potato"
+url = "https://www.tesco.ie/groceries/en-IE/search?query="+query_item
 
-if __name__ == "__main__":
-    #query_item = str(sys.argv[1]).lower()
-    query_item = "beans"
-    url = "https://www.tesco.ie/groceries/en-IE/search?query="+query_item
+currency = "€"
 
-    currency = "€"
+print(url)
 
-    print(url)
+html_content = urlopen(url).read().decode('utf-8')
+#html_content = urlopen('https://www.tesco.ie/groceries/zone/contact-us/').read().decode('utf-8')
 
-    html_content = urlopen(url).read().decode('utf-8')
-    #print("html_content = ", html_content)
-    #html_content = urlopen('https://www.tesco.ie/groceries/zone/contact-us/').read().decode('utf-8')
+#split_html_content = html_content.split('>')[-1].split('<')[0]
+split_html_content = re.split('text">|</',html_content)
+special_chars = [">","<",";"]
 
-    #split_html_content = html_content.split('>')[-1].split('<')[0]
-    split_html_content = re.split('text">|</',html_content)
-    #print(split_html_content)
-    special_chars = [">","<",";"]
+items_on_sale = []
 
-    items_on_sale = []
-
-    page_number = get_number_of_pages(split_html_content)
-'''
 ### Split string and get
 for string in split_html_content:
     if query_item in string.lower() or currency in string:
@@ -66,9 +53,9 @@ for item in items_on_sale:
             item_row[3] = item
         else:
             item_row[2] = item
-'''
-#for row in item_array:
-#    print("|{:<70} | {:<40} | {:<8} | {:<8}".format(row[0],row[1],row[2],row[3] ))
+
+for row in item_array:
+    print("|{:<70} | {:<40} | {:<8} | {:<8}".format(row[0],row[1],row[2],row[3] ))
 
 #print("{:<20} {:<8} {:<8} {:<8}".format("Product","Discount","Price","Price/kg"))
 #for k,v in item_array.items():
