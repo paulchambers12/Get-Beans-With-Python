@@ -2,29 +2,52 @@
 #   :> source pyWebSearch/bin/activate
 #
 
-from urllib.request import urlopen
+from urllib.request import urlopen,Request
 import re,sys
-import numpy,pandas
+import base64
 
+try:
+    query_item = str(sys.argv[1]).lower()
+except IndexError:
+    print("Please ensure your input is as follows:")
+    print("python3 main.py <product>")
+    print("-----------------------------")
+    print("Searching for 'Beans'")
+    query_item = "beans"
 
-query_item = str(sys.argv[1]).lower()
-#query_item = "potato"
+## Dunnes Stores Request
+#url = "https://www.dunnesstoresgrocery.com/sm/delivery/rsid/258/results?q="+query_item
+
+## Tesco Request
 url = "https://www.tesco.ie/groceries/en-IE/search?query="+query_item
-
+req = Request(
+    url,
+    data=None,
+    headers={
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-GB,en;q=0.5',
+        'Accept-Encoding': 'utf-8, deflate',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Connection': 'close'
+    }
+)
 currency = "€"
 
 print(url)
 
-html_content = urlopen(url).read().decode('utf-8')
-#html_content = urlopen('https://www.tesco.ie/groceries/zone/contact-us/').read().decode('utf-8')
+#print(urlopen(req).read().decode('utf-8'))
+html_content = urlopen(req).read().decode('utf-8')
 
-#split_html_content = html_content.split('>')[-1].split('<')[0]
+print("Content Recieved")
+
 split_html_content = re.split('text">|</',html_content)
-special_chars = [">","<",";"]
 
 items_on_sale = []
 
-### Split string and get
+## Tesco
+### Split string and get desired content line by line
 for string in split_html_content:
     if query_item in string.lower() or currency in string:
         if "__" not in string and ">" not in string and "-" not in string:
@@ -56,21 +79,3 @@ for item in items_on_sale:
 
 for row in item_array:
     print("|{:<60} | {:<40} | {:<8} | {:<8}".format(row[0],row[1],row[2],row[3] ))
-
-#print("{:<20} {:<8} {:<8} {:<8}".format("Product","Discount","Price","Price/kg"))
-#for k,v in item_array.items():
-#    p,d,c,k = v
-#    print("{:<20} {:<8} {:<8} {:<8}".format(p,d,c,k ))
-#    print(v)
-
-#for string in items_on_sale:
-#    if currency in string:
-#        print(string)
-
-# matches =re.findall(regex,split_html_content,re.IGNORECASE);
-
-#if len(matches) == 0:
-#    print('This website has no beans to sell')
-#else:
-#    print(matches)
-#    print(html_content)
