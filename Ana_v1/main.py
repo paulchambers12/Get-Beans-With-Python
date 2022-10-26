@@ -39,12 +39,10 @@ for string in split_html_content:
 row = 0
 item_row = ["Product","Discount","Price","Price/vol"]
 item_array = []
+item_array.append(item_row)
 for item in items_on_sale:
     if query_item in item.lower():
-        item_array.append(item_row)
         item_row = ["","","",""]
-        #row += 1
-#        print(row)
         item_row[0] = item
     if "€" in item:
         if "Clubcard Price" in item or "Save" in item:
@@ -53,9 +51,11 @@ for item in items_on_sale:
             item_row[3] = item
         else:
             item_row[2] = item
+    else:
+        item_array.append(item_row)
 
 for row in item_array:
-    print("|{:<70} | {:<40} | {:<8} | {:<8}".format(row[0],row[1],row[2],row[3] ))
+    print("|{:<60} | {:<40} | {:<8} | {:<8}".format(row[0],row[1],row[2],row[3] ))
 
 #print("{:<20} {:<8} {:<8} {:<8}".format("Product","Discount","Price","Price/kg"))
 #for k,v in item_array.items():
