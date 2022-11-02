@@ -16,4 +16,20 @@ HOW TO DO
 3)Do the thingsss
 
 
+# Functionality
 
+The scraper currently works bu running the following command:
+
+```python
+python3 main.py <produce>
+```
+
+
+
+# Project Tasks
+- [x] Scan Tesco for product
+- [ ] Scan Dunnes Stores for product
+- [ ] Scan SuperValue for product
+
+## Further features
+- [ ] Scan through multiple pages
