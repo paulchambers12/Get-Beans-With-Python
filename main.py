@@ -2,40 +2,83 @@
 #   :> source pyWebSearch/bin/activate
 #
 
-from urllib.request import urlopen
+from urllib.request import urlopen,Request
+import urllib.request
 import re,sys
 #import numpy#,pandas
 
 #comment
 def get_number_of_pages(split_html_content):
-    print(split_html_content)
-    pages = []
+
+    page_no = 0
     query_item1 = "Go to results page"
     for string in split_html_content:
+        #print("in the for loop.")
         if query_item1 in string:
-            pages.append(string.replace("&amp;", "&"))
+            broken_string = re.split('page=|"', string)
+            #print("words = ", broken_string)
+            for part in broken_string:
+                if part.isdigit():
+                    #print("part is : ", part)
+                    port = int(part)
+                    if port > page_no:
+                        page_no = port
+    #print("page_no is : ", page_no)
+    return page_no
+
+def get_htlm_stuff():
+    try:
+        query_item = str(sys.argv[1]).lower()
+    except IndexError:
+        print("Please ensure your input is as follows:")
+        print("python3 main.py <product>")
+        print("-----------------------------")
+        print("Searching for 'Beans'")
+        query_item = "beans"
+    #query_item = str(sys.argv[1]).lower()
+    #query_item = "beans"
+    url = "https://www.tesco.ie/groceries/en-IE/search?query="+query_item
+    req = Request(
+        url,
+        data=None,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0',
+            'Accept': '*/*',
+            'Accept-Language': 'en-GB,en;q=0.5',
+            'Accept-Encoding': 'utf-8, deflate',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Connection': 'close'
+        }
+    )
+    #print(url)
+    found_html_content = urllib.request.urlopen(req).read().decode('utf-8')
+    return found_html_content
 
 if __name__ == "__main__":
-    #query_item = str(sys.argv[1]).lower()
-    query_item = "beans"
-    url = "https://www.tesco.ie/groceries/en-IE/search?query="+query_item
 
-    currency = "€"
+    #url = "https://www.tesco.ie/groceries/en-IE/search?query=" + query_item
+    html_content = get_htlm_stuff()
 
-    print(url)
 
-    html_content = urlopen(url).read().decode('utf-8')
+    #print("money? ")
+    #currency = "€"
+
+    #print("html_content ", html_content)
     #print("html_content = ", html_content)
     #html_content = urlopen('https://www.tesco.ie/groceries/zone/contact-us/').read().decode('utf-8')
 
     #split_html_content = html_content.split('>')[-1].split('<')[0]
+    print("pre split")
     split_html_content = re.split('text">|</',html_content)
-    #print(split_html_content)
+    print("post split")
     special_chars = [">","<",";"]
 
     items_on_sale = []
 
     page_number = get_number_of_pages(split_html_content)
+    #page_number = get_number_of_pages(split_html_content)
+    print("page_number = ", page_number)
 '''
 ### Split string and get
 for string in split_html_content:
