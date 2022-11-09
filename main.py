@@ -103,7 +103,7 @@ if __name__ == "__main__":
         page_of_info = get_htlm_stuff(page_number)
         split_html_content = re.split('text">|</', page_of_info)
 
-        ### Split string and get
+        ### Split string and get.
         for string in split_html_content:
             if query_item in string.lower() or currency in string:
                 if "__" not in string and ">" not in string and "-" not in string:
