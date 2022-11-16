@@ -81,6 +81,9 @@ def process_tesco_results(page_no):
 
 if __name__ == "__main__":
 
+    print("please enter product desired")
+    query_item = input()
+    '''
     try:
         query_item = str(sys.argv[1]).lower()
     except IndexError:
@@ -89,7 +92,7 @@ if __name__ == "__main__":
         print("-----------------------------")
         print("Searching for 'Beans'")
         query_item = "beans"
-
+    '''
     # initialize local variables
     currency = "€"
     page = 0
@@ -118,7 +121,7 @@ if __name__ == "__main__":
                 item_row = ["","","",""]
                 item_row[0] = item
             if "€" in item:
-                if "Clubcard Price" in item or "Save" in item:
+                if "Clubcard Price" in item or "Save" in item or "Now" in item:
                     item_row[1] = item
                 elif "/" in item:
                     item_row[3] = item
